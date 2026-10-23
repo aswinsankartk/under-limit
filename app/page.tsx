@@ -1,69 +1,105 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <main className="min-h-screen bg-chalk text-charcoal-brown">
+      <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-6 md:px-10">
+        <Link
+          href="/"
+          className="text-xl font-bold tracking-tight"
+          aria-label="Under Limit home"
+        >
+          under limit<span className="text-terracotta">.</span>
+        </Link>
+
+        <Link
+          href="#resizer"
+          className="rounded-full border border-charcoal-brown/20 px-5 py-2.5 text-sm font-medium transition-colors hover:border-terracotta hover:text-terracotta"
+        >
+          Start resizing
+        </Link>
+      </header>
+
+      <section className="mx-auto grid w-full max-w-7xl gap-12 px-6 pb-20 pt-12 md:px-10 md:pb-28 md:pt-20 lg:grid-cols-2 lg:items-center">
+        <div className="max-w-xl">
+          <p className="mb-6 text-xs font-semibold uppercase tracking-[0.22em] text-terracotta">
+            A little less hassle.
+          </p>
+
+          <h1 className="text-5xl font-medium leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
+            Fits the form
+            <br />
+            on the first
+            <span className="text-terracotta"> try.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+          <p className="mt-6 max-w-md text-base leading-7 text-charcoal-brown/70 sm:text-lg">
+            Resize and compress your photos and signatures to match upload
+            requirements. No accounts, no uploads, no unnecessary fuss.
+          </p>
+
+          <Link
+            href="#resizer"
+            className="mt-8 inline-flex items-center justify-center rounded-full bg-terracotta px-7 py-3.5 text-sm font-semibold text-chalk transition-colors hover:bg-charcoal-brown"
+          >
+            Resize your image
+            <span className="ml-3" aria-hidden="true">
+              →
+            </span>
+          </Link>
+
+          <p className="mt-5 text-xs text-charcoal-brown/60">
+            Free to use · Processed in your browser
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div
+          id="resizer"
+          className="rounded-3xl border border-charcoal-brown/10 bg-white/60 p-5 shadow-sm sm:p-8"
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold">Image workspace</p>
+              <p className="mt-1 text-sm text-charcoal-brown/60">
+                Your next upload starts here.
+              </p>
+            </div>
+
+            <span className="rounded-full bg-clay px-3 py-1 text-xs font-medium">
+              JPG · PNG · WebP
+            </span>
+          </div>
+
+          <div className="mt-7 flex min-h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-dusty-peach bg-chalk/70 px-5 py-10 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-clay text-2xl">
+              ↥
+            </div>
+
+            <p className="mt-5 font-semibold">Your image goes here</p>
+
+            <p className="mt-2 max-w-xs text-sm leading-6 text-charcoal-brown/60">
+              Soon, you&apos;ll be able to choose a photo or signature and set
+              the exact file size and dimensions you need.
+            </p>
+
+            <span className="mt-5 rounded-full border border-charcoal-brown/15 px-4 py-2 text-xs font-medium text-charcoal-brown/60">
+              Upload functionality coming next
+            </span>
+          </div>
+
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-xs text-charcoal-brown/60">
+            <span>Private by design</span>
+            <span>Nothing sent to a server</span>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <footer className="border-t border-charcoal-brown/10 px-6 py-6 md:px-10">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 text-xs text-charcoal-brown/60 sm:flex-row sm:items-center sm:justify-between">
+          <span>under limit.</span>
+          <span>Fits the form on the first try.</span>
+        </div>
+      </footer>
+    </main>
   );
 }
