@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ImageUploader from "@/components/ImageUploader";
 
 export default function Home() {
   return (
@@ -57,40 +58,7 @@ export default function Home() {
           id="resizer"
           className="rounded-3xl border border-charcoal-brown/10 bg-white/60 p-5 shadow-sm sm:p-8"
         >
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-sm font-semibold">Image workspace</p>
-              <p className="mt-1 text-sm text-charcoal-brown/60">
-                Your next upload starts here.
-              </p>
-            </div>
-
-            <span className="rounded-full bg-clay px-3 py-1 text-xs font-medium">
-              JPG · PNG · WebP
-            </span>
-          </div>
-
-          <div className="mt-7 flex min-h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-dusty-peach bg-chalk/70 px-5 py-10 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-clay text-2xl">
-              ↥
-            </div>
-
-            <p className="mt-5 font-semibold">Your image goes here</p>
-
-            <p className="mt-2 max-w-xs text-sm leading-6 text-charcoal-brown/60">
-              Soon, you&apos;ll be able to choose a photo or signature and set
-              the exact file size and dimensions you need.
-            </p>
-
-            <span className="mt-5 rounded-full border border-charcoal-brown/15 px-4 py-2 text-xs font-medium text-charcoal-brown/60">
-              Upload functionality coming next
-            </span>
-          </div>
-
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-xs text-charcoal-brown/60">
-            <span>Private by design</span>
-            <span>Nothing sent to a server</span>
-          </div>
+          <ImageUploader />
         </div>
       </section>
 
