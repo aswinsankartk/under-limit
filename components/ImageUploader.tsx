@@ -16,6 +16,16 @@ export default function ImageUploader() {
   const [targetWidth, setTargetWidth] = useState<number | null>(null);
   const [targetHeight, setTargetHeight] = useState<number | null>(null);
 
+  const [resizedBlob, setResizedBlob] = useState<Blob | null>(null);
+  const resizedUrlRef = useRef<string | null>(null);
+  const [resizedPreviewUrl, setResizedPreviewUrl] = useState<string | null>(
+    null,
+  );
+
+  const [outputFormat, setOutputFormat] = useState<
+    "image/jpeg" | "image/png" | "image/webp"
+  >("image/jpeg");
+
   const dimensionsAreValid =
     targetWidth !== null &&
     Number.isInteger(targetWidth) &&
@@ -36,23 +46,73 @@ export default function ImageUploader() {
       setError(msg);
       return;
     }
-    setError(null);
+    if (urlRef.current) {
+      URL.revokeObjectURL(urlRef.current);
+      urlRef.current = null;
+    }
+    if (resizedUrlRef.current) {
+      URL.revokeObjectURL(resizedUrlRef.current);
+      resizedUrlRef.current = null;
+    }
+
+    setResizedBlob(null);
+    setResizedPreviewUrl(null);
+
     const url = URL.createObjectURL(file);
     setImage(file);
     setPreviewUrl(url);
     setDimensions(null);
-    if (urlRef.current) {
-      URL.revokeObjectURL(urlRef.current);
-    }
-    urlRef.current = url;
+    setError(null);
   };
 
-  const handleResize = () => {
+  const handleResize = async () => {
+    if (!image) {
+      setError("Please select an image before resizing.");
+      return;
+    }
     if (!dimensionsAreValid) {
       setError("Please enter valid positive whole-number dimensions.");
       return;
     }
     setError(null);
+    let bitmap: ImageBitmap | null = null;
+
+    try {
+      bitmap = await createImageBitmap(image);
+      const canvas = document.createElement("canvas");
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      const context = canvas.getContext("2d");
+      if (!context) {
+        setError("Failed to get canvas context.");
+        return;
+      }
+      context.drawImage(bitmap, 0, 0, targetWidth, targetHeight);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            setError("Failed to create resized image blob.");
+            return;
+          }
+          setResizedBlob(blob);
+          if (resizedUrlRef.current) {
+            URL.revokeObjectURL(resizedUrlRef.current);
+            resizedUrlRef.current = null;
+          }
+          resizedUrlRef.current = URL.createObjectURL(blob);
+          setResizedPreviewUrl(resizedUrlRef.current);
+        },
+        outputFormat,
+        0.9,
+      );
+    } catch (error) {
+      console.error("Error resizing image", error);
+      setError("We couldn't resize this image. Please try again.");
+    } finally {
+      if (bitmap) {
+        bitmap.close();
+      }
+    }
   };
 
   useEffect(() => {
@@ -95,9 +155,18 @@ export default function ImageUploader() {
       if (urlRef.current) {
         URL.revokeObjectURL(urlRef.current);
       }
+      if (resizedUrlRef.current) {
+        URL.revokeObjectURL(resizedUrlRef.current);
+      }
     };
   }, []);
 
+  const outputExtension =
+    outputFormat === "image/jpeg"
+      ? "jpg"
+      : outputFormat === "image/png"
+        ? "png"
+        : "webp";
   return (
     <section>
       <h2>Image workspace</h2>
@@ -156,7 +225,43 @@ export default function ImageUploader() {
         }
         placeholder="Target Height"
       />
+      <label htmlFor="outputFormat">Output Format:</label>
+      <select
+        id="outputFormat"
+        value={outputFormat}
+        onChange={(e) =>
+          setOutputFormat(
+            e.target.value as "image/jpeg" | "image/png" | "image/webp",
+          )
+        }
+      >
+        <option value="image/jpeg">JPEG</option>
+        <option value="image/png">PNG</option>
+        <option value="image/webp">WebP</option>
+      </select>
       <button onClick={handleResize}>Resize</button>
+      {resizedPreviewUrl && (
+        <div>
+          <Image
+            src={resizedPreviewUrl}
+            alt="Resized image preview"
+            width={targetWidth!}
+            height={targetHeight!}
+            unoptimized
+            className="mt-4 max-w-full rounded-xl object-contain"
+          />
+          <p>
+            {targetWidth} × {targetHeight} px
+          </p>
+          {resizedBlob && <p>{(resizedBlob.size / 1024).toFixed(2)} KB</p>}
+          <a
+            href={resizedPreviewUrl}
+            download={`under-limit-image.${outputExtension}`}
+          >
+            Download Resized Image
+          </a>
+        </div>
+      )}
     </section>
   );
 }
