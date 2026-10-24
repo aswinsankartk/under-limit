@@ -55,6 +55,7 @@ export default function ImageUploader() {
         if (!cancelled) {
           setDimensions(null);
           console.error("Error reading image dimensions:", error);
+          setError("We couldn't read this image. Please try another file.");
         }
       } finally {
         if (bitmap) {
@@ -89,12 +90,12 @@ export default function ImageUploader() {
           {error}
         </p>
       )}
-      {image && (
+      {image && dimensions && (
         <p>
           {image.name} - {(image.size / 1024).toFixed(2)} KB
         </p>
       )}
-      {error && <p>Previous valid image</p>}
+      {error && previewUrl && dimensions && <p>Previous valid image</p>}
       {previewUrl && dimensions && (
         <Image
           src={previewUrl}
