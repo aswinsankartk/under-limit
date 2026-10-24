@@ -13,6 +13,17 @@ export default function ImageUploader() {
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [targetWidth, setTargetWidth] = useState<number | null>(null);
+  const [targetHeight, setTargetHeight] = useState<number | null>(null);
+
+  const dimensionsAreValid =
+    targetWidth !== null &&
+    Number.isInteger(targetWidth) &&
+    targetWidth > 0 &&
+    targetHeight !== null &&
+    Number.isInteger(targetHeight) &&
+    targetHeight > 0;
+
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
     const file = event.target.files?.[0];
@@ -36,6 +47,14 @@ export default function ImageUploader() {
     urlRef.current = url;
   };
 
+  const handleResize = () => {
+    if (!dimensionsAreValid) {
+      setError("Please enter valid positive whole-number dimensions.");
+      return;
+    }
+    setError(null);
+  };
+
   useEffect(() => {
     let cancelled = false;
     if (!image) {
@@ -51,6 +70,8 @@ export default function ImageUploader() {
           width: bitmap.width,
           height: bitmap.height,
         });
+        setTargetWidth(bitmap.width);
+        setTargetHeight(bitmap.height);
       } catch (error) {
         if (!cancelled) {
           setDimensions(null);
@@ -76,6 +97,7 @@ export default function ImageUploader() {
       }
     };
   }, []);
+
   return (
     <section>
       <h2>Image workspace</h2>
@@ -110,6 +132,31 @@ export default function ImageUploader() {
           Dimensions: {dimensions.width} × {dimensions.height} px
         </p>
       )}
+      <label htmlFor="targetWidth">Target Width:</label>
+      <input
+        type="number"
+        id="targetWidth"
+        value={targetWidth ?? ""}
+        min={1}
+        step={1}
+        onChange={(e) =>
+          setTargetWidth(e.target.value === "" ? null : Number(e.target.value))
+        }
+        placeholder="Target Width"
+      />
+      <label htmlFor="targetHeight">Target Height:</label>
+      <input
+        type="number"
+        id="targetHeight"
+        value={targetHeight ?? ""}
+        min={1}
+        step={1}
+        onChange={(e) =>
+          setTargetHeight(e.target.value === "" ? null : Number(e.target.value))
+        }
+        placeholder="Target Height"
+      />
+      <button onClick={handleResize}>Resize</button>
     </section>
   );
 }
