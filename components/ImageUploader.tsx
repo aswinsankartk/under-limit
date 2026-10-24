@@ -16,6 +16,9 @@ export default function ImageUploader() {
   const [targetWidth, setTargetWidth] = useState<number | null>(null);
   const [targetHeight, setTargetHeight] = useState<number | null>(null);
 
+  const [minimumFileSize, setMinimumFileSize] = useState<number | null>(null);
+  const [maximumFileSize, setMaximumFileSize] = useState<number | null>(null);
+
   const [resizedBlob, setResizedBlob] = useState<Blob | null>(null);
   const resizedUrlRef = useRef<string | null>(null);
   const [resizedPreviewUrl, setResizedPreviewUrl] = useState<string | null>(
@@ -33,6 +36,15 @@ export default function ImageUploader() {
     targetHeight !== null &&
     Number.isInteger(targetHeight) &&
     targetHeight > 0;
+
+  const fileSizeRangeIsValid =
+    minimumFileSize !== null &&
+    maximumFileSize !== null &&
+    minimumFileSize >= 0 &&
+    maximumFileSize >= 0 &&
+    maximumFileSize > minimumFileSize &&
+    Number.isFinite(maximumFileSize) &&
+    Number.isFinite(minimumFileSize);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
@@ -74,6 +86,16 @@ export default function ImageUploader() {
       setError("Please enter valid positive whole-number dimensions.");
       return;
     }
+    if (!fileSizeRangeIsValid) {
+      setError("Please enter valid file size range.");
+      return;
+    }
+    setResizedBlob(null);
+    setResizedPreviewUrl(null);
+    if (resizedUrlRef.current) {
+      URL.revokeObjectURL(resizedUrlRef.current);
+      resizedUrlRef.current = null;
+    }
     setError(null);
     let bitmap: ImageBitmap | null = null;
 
@@ -88,23 +110,75 @@ export default function ImageUploader() {
         return;
       }
       context.drawImage(bitmap, 0, 0, targetWidth, targetHeight);
-      canvas.toBlob(
-        (blob) => {
-          if (!blob) {
-            setError("Failed to create resized image blob.");
-            return;
+      let low = 0.05;
+      let high = 1.0;
+      let quality = 0.9;
+      let bestResult: Blob | null = null;
+      if (outputFormat === "image/png") {
+        const blob = await new Promise<Blob>((resolve, reject) => {
+          canvas.toBlob(
+            (result) => {
+              if (!result) {
+                reject(new Error("Failed to export image."));
+                return;
+              }
+              resolve(result);
+            },
+            outputFormat,
+            quality,
+          );
+        });
+        const blobSizeKB = blob.size / 1024;
+        if (blobSizeKB >= minimumFileSize && blobSizeKB <= maximumFileSize) {
+          bestResult = blob;
+        } else {
+          setError(
+            "PNG cannot meet the requested range at the current dimensions. Please try reducing the dimensions or choosing another format.",
+          );
+          return;
+        }
+      } else {
+        for (let attempt = 0; attempt < 10; attempt++) {
+          quality = (low + high) / 2;
+          const blob = await new Promise<Blob>((resolve, reject) => {
+            canvas.toBlob(
+              (result) => {
+                if (!result) {
+                  reject(new Error("Failed to export image."));
+                  return;
+                }
+                resolve(result);
+              },
+              outputFormat,
+              quality,
+            );
+          });
+          const blobSizeKB = blob.size / 1024;
+          if (blobSizeKB > maximumFileSize) {
+            high = quality;
+          } else if (blobSizeKB < minimumFileSize) {
+            low = quality;
+          } else {
+            bestResult = blob;
+            low = quality;
           }
-          setResizedBlob(blob);
-          if (resizedUrlRef.current) {
-            URL.revokeObjectURL(resizedUrlRef.current);
-            resizedUrlRef.current = null;
-          }
-          resizedUrlRef.current = URL.createObjectURL(blob);
-          setResizedPreviewUrl(resizedUrlRef.current);
-        },
-        outputFormat,
-        0.9,
-      );
+        }
+      }
+
+      if (!bestResult) {
+        setError(
+          "We couldn't fit this image within the requested file-size range at these dimensions. Try different dimensions or choosing another format.",
+        );
+        return;
+      }
+      setResizedBlob(bestResult);
+      if (resizedUrlRef.current) {
+        URL.revokeObjectURL(resizedUrlRef.current);
+        resizedUrlRef.current = null;
+      }
+      const url = URL.createObjectURL(bestResult);
+      resizedUrlRef.current = url;
+      setResizedPreviewUrl(url);
     } catch (error) {
       console.error("Error resizing image", error);
       setError("We couldn't resize this image. Please try again.");
@@ -225,6 +299,34 @@ export default function ImageUploader() {
         }
         placeholder="Target Height"
       />
+      <label htmlFor="minimumFileSize">Minimum File Size (KB):</label>
+      <input
+        type="number"
+        id="minimumFileSize"
+        value={minimumFileSize ?? ""}
+        min={0}
+        step={1}
+        onChange={(e) =>
+          setMinimumFileSize(
+            e.target.value === "" ? null : Number(e.target.value),
+          )
+        }
+        placeholder="Minimum File Size"
+      />
+      <label htmlFor="maximumFileSize">Maximum File Size (KB):</label>
+      <input
+        type="number"
+        id="maximumFileSize"
+        value={maximumFileSize ?? ""}
+        min={0}
+        step={1}
+        onChange={(e) =>
+          setMaximumFileSize(
+            e.target.value === "" ? null : Number(e.target.value),
+          )
+        }
+        placeholder="Maximum File Size"
+      />
       <label htmlFor="outputFormat">Output Format:</label>
       <select
         id="outputFormat"
@@ -253,7 +355,9 @@ export default function ImageUploader() {
           <p>
             {targetWidth} × {targetHeight} px
           </p>
-          {resizedBlob && <p>{(resizedBlob.size / 1024).toFixed(2)} KB</p>}
+          {resizedBlob && resizedPreviewUrl && (
+            <p>{(resizedBlob.size / 1024).toFixed(2)} KB</p>
+          )}
           <a
             href={resizedPreviewUrl}
             download={`under-limit-image.${outputExtension}`}
