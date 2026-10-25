@@ -44,7 +44,7 @@ Image processing happens in the browser using the Canvas API. Images are not upl
 Clone the repository and enter the project directory:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/aswinsankartk/under-limit.git
 cd under-limit
 ```
 
