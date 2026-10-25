@@ -1,5 +1,8 @@
 "use client";
 
+import { LuImage } from "react-icons/lu";
+import { IoResize } from "react-icons/io5";
+
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 
@@ -305,7 +308,7 @@ export default function ImageUploader() {
       : null;
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 transition-all">
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-semibold">Image Workspace</h2>
@@ -441,7 +444,7 @@ export default function ImageUploader() {
                 e.target.value as "image/jpeg" | "image/png" | "image/webp",
               )
             }
-            className="w-full rounded-lg border border-charcoal-brown/15 bg-white px-3 py-2"
+            className="w-full appearance-none rounded-xl border border-[#D9A895] bg-[#FBF4EF] px-4 py-3 font-sans text-[#2F2724] outline-none transition focus:border-[#B5523C] focus:ring-2 focus:ring-[#B5523C]/20"
           >
             <option value="image/jpeg">JPEG</option>
             <option value="image/png">PNG</option>
@@ -456,89 +459,109 @@ export default function ImageUploader() {
           Resize
         </button>
       </div>
-      {/* Combined grid */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Original image card */}
-        <div className="min-w-0 rounded-2xl border border-charcoal-brown/10 bg-white/60 p-4 sm:p-6">
-          <h3 className="text-sm font-semibold uppercase tracking-wider">
-            Original image
-          </h3>
-          {previewUrl && dimensions && (
-            <Image
-              src={previewUrl}
-              alt="Selected image preview"
-              className="mt-4 max-w-full rounded-xl object-contain"
-              width={dimensions?.width}
-              height={dimensions?.height}
-            />
-          )}
-          {image && dimensions && (
-            <div>
-              <p>{image.name}</p>
-              <p>
-                Dimensions: {dimensions.width} × {dimensions.height} px
-              </p>
-              <p>File size: {(image.size / 1024).toFixed(2)} KB</p>
-            </div>
-          )}
-          {!previewUrl && (
-            <div className="flex min-h-48 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-charcoal-brown/15 p-6 text-center">
-              <p className="font-medium">
-                Your original image will appear here
-              </p>
-              <p className="text-sm text-charcoal-brown/60">
-                Choose a JPG, PNG or WebP image to get started.
-              </p>
-            </div>
-          )}
-        </div>
-        {/* Resized image card */}
-        <div className="min-w-0 rounded-2xl border border-charcoal-brown/10 bg-white/60 p-4 sm:p-6">
-          <h3 className="text-sm font-semibold uppercase tracking-wider">
-            Resized image
-          </h3>
-          {resizedPreviewUrl && (
-            <div>
-              <Image
-                src={resizedPreviewUrl}
-                alt="Resized image preview"
-                width={targetWidth!}
-                height={targetHeight!}
-                unoptimized
-                className="mt-4 max-w-full rounded-xl object-contain"
-              />
-              <p>
-                {targetWidth} × {targetHeight} px
-              </p>
-              {resizedBlob && resizedPreviewUrl && (
-                <p>{(resizedBlob.size / 1024).toFixed(2)} KB</p>
+      <div>
+        {/* Combined grid */}
+        {image && (
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Original image card */}
+            <div className="min-w-0 rounded-2xl border border-charcoal-brown/10 bg-white/60 p-4 sm:p-6">
+              <h3 className="text-sm font-semibold uppercase tracking-wider">
+                Original image
+              </h3>
+              {previewUrl && dimensions && (
+                <Image
+                  src={previewUrl}
+                  alt="Selected image preview"
+                  className="mt-4 max-w-full rounded-xl object-contain"
+                  width={dimensions?.width}
+                  height={dimensions?.height}
+                />
               )}
-              <a
-                href={resizedPreviewUrl}
-                download={`under-limit-image.${outputExtension}`}
-              >
-                Download Resized Image
-              </a>
+              {image && dimensions && (
+                <div className="mt-2 flex flex-col gap-2">
+                  <p className="flex gap-2 items-center">
+                    <LuImage />
+                    {dimensions.width} × {dimensions.height} px
+                  </p>
+                  <p className="flex gap-2 items-center">
+                    <IoResize />
+                    {(image.size / 1024).toFixed(2)} KB
+                  </p>
+                </div>
+              )}
+              {!previewUrl && (
+                <div className="flex min-h-48 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-charcoal-brown/15 p-6 text-center">
+                  <p className="font-medium">
+                    Your original image will appear here
+                  </p>
+                  <p className="text-sm text-charcoal-brown/60">
+                    Choose a JPG, PNG or WebP image to get started.
+                  </p>
+                </div>
+              )}
             </div>
-          )}
-          {!resizedPreviewUrl && (
-            <div className="flex min-h-48 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-charcoal-brown/15 p-6 text-center">
-              <p className="font-medium">Your resized image will appear here</p>
-              <p className="text-sm text-charcoal-brown/60">
-                Choose your settings and select Resize image to get started.
-              </p>
+            {/* Resized image card */}
+            <div className="min-w-0 rounded-2xl border border-charcoal-brown/10 bg-white/60 p-4 sm:p-6">
+              <h3 className="text-sm font-semibold uppercase tracking-wider">
+                Resized image
+              </h3>
+              {resizedPreviewUrl && (
+                <div>
+                  <Image
+                    src={resizedPreviewUrl}
+                    alt="Resized image preview"
+                    width={targetWidth!}
+                    height={targetHeight!}
+                    unoptimized
+                    className="mt-4 max-w-full rounded-xl object-contain"
+                  />
+                  <div className="className=mt-2 flex flex-col gap-2">
+                    <div></div>
+                    <p className="flex gap-2 items-center">
+                      <LuImage />
+                      {targetWidth} × {targetHeight} px
+                    </p>
+                    {resizedBlob && resizedPreviewUrl && (
+                      <p className="flex gap-2 items-center">
+                        <IoResize />
+                        {(resizedBlob.size / 1024).toFixed(2)} KB
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+              {!resizedPreviewUrl && (
+                <div className="flex min-h-48 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-charcoal-brown/15 p-6 text-center">
+                  <p className="font-medium">
+                    Your resized image will appear here
+                  </p>
+                  <p className="text-sm text-charcoal-brown/60">
+                    Choose your settings and select Resize image to get started.
+                  </p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
+        {resizedPreviewUrl && (
+          <a
+            href={resizedPreviewUrl}
+            download={`under-limit-image.${outputExtension}`}
+            className="flex justify-center rounded-lg bg-terracotta px-5 py-3 font-semibold text-white transition-colors hover:bg-charcoal-brown focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta mt-3 lg:text-sm "
+          >
+            Download Resized Image
+          </a>
+        )}
       </div>
+
       {resizedBlob && (
         <div className="mt-6 rounded-2xl border border-charcoal-brown/10 bg-white/60 p-5 sm:p-6">
           <h3 className="text-sm font-semibold uppercase tracking-wider">
             Size comparison
           </h3>
           <div className="mt-4 grid grid-cols-2 gap-4">
-            <p>Original Image Size: {originalSizeKB?.toFixed(2)} KB</p>
-            <p>Resized Image size: {resizedSizeKB?.toFixed(2)} KB</p>
+            <p>Original: {originalSizeKB?.toFixed(2)} KB</p>
+            <p>Resized: {resizedSizeKB?.toFixed(2)} KB</p>
           </div>
           {originalSizeKB !== null &&
             resizedSizeKB !== null &&

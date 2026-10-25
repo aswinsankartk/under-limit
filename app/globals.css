@@ -12,6 +12,9 @@
 }
 
 @theme inline {
+  --font-sans: var(--font-onest);
+  --font-heading: var(--font-bricolage);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
@@ -20,8 +23,6 @@
   --color-terracotta: var(--terracotta);
   --color-dusty-peach: var(--dusty-peach);
   --color-clay: var(--clay);
-
-  --font-sans: Arial, Helvetica, sans-serif;
 }
 
 * {
