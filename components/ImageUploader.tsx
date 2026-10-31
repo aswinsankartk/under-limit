@@ -1,5 +1,7 @@
 "use client";
 
+import { isSupportedImageType } from "../lib/image-utils";
+
 import { LuImage } from "react-icons/lu";
 import { IoResize } from "react-icons/io5";
 
@@ -80,8 +82,7 @@ export default function ImageUploader() {
   };
 
   const handleSelectedFile = (file: File) => {
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-    if (!allowedTypes.includes(file.type)) {
+    if (!isSupportedImageType(file.type)) {
       setError(
         "Unsupported file type. Please select a JPEG, PNG, or WebP image.",
       );
