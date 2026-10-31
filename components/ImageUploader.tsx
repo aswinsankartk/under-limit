@@ -350,9 +350,10 @@ export default function ImageUploader() {
         />
 
         {image && (
-          <div className="flex justify-center">
-            <div className="flex max-w-full items-center gap-2 rounded-full bg-[#E7D8CF] px-3 py-2 text-sm">
-              <span className="truncate">{image.name}</span>
+          <div className="flex w-full min-w-0 justify-center">
+            <div className="flex w-fit max-w-full min-w-0 items-center gap-2 rounded-full bg-[#E7D8CF] px-3 py-2 text-sm">
+              <span className="min-w-0 truncate">{image.name}</span>
+
               <button
                 type="button"
                 onClick={handleRemoveImage}

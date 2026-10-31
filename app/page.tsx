@@ -42,7 +42,7 @@ export default function Home() {
 
         <div
           id="resizer"
-          className="rounded-3xl border border-charcoal-brown/10 bg-white/60 p-5 shadow-sm sm:p-8"
+          className="w-full min-w-0 rounded-3xl border border-charcoal-brown/10 bg-white/60 p-5 shadow-sm sm:p-8"
         >
           <ImageUploader />
         </div>
