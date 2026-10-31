@@ -36,6 +36,8 @@ export default function ImageUploader() {
 
   const [isDragging, setIsDragging] = useState(false);
 
+  const [isResizing, setIsResizing] = useState(false);
+
   const dimensionsAreValid =
     targetWidth !== null &&
     Number.isInteger(targetWidth) &&
@@ -150,6 +152,7 @@ export default function ImageUploader() {
     }
 
     setError(null);
+    setIsResizing(true);
     let bitmap: ImageBitmap | null = null;
 
     try {
@@ -239,6 +242,7 @@ export default function ImageUploader() {
       if (bitmap) {
         bitmap.close();
       }
+      setIsResizing(false);
     }
   };
 
@@ -455,10 +459,20 @@ export default function ImageUploader() {
         </div>
 
         <button
+          type="button"
           onClick={handleResize}
-          className="w-full rounded-lg bg-terracotta px-5 py-3 font-semibold text-white transition-colors hover:bg-charcoal-brown focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          disabled={isResizing}
+          aria-busy={isResizing}
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-terracotta px-5 py-3 font-semibold text-white transition-colors hover:bg-charcoal-brown disabled:cursor-not-allowed disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
-          Resize
+          {isResizing ? (
+            <>
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+              Resizing...
+            </>
+          ) : (
+            "Resize"
+          )}
         </button>
       </div>
       <div>
