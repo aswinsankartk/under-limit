@@ -14,7 +14,7 @@ export default function Home() {
           under limit<span className="text-terracotta">.</span>
         </Link>
         <Image
-          src={"/logo.webp"}
+          src={"/under-limit-logo.svg"}
           alt="Under Limit Logo"
           width={30}
           height={30}
@@ -23,7 +23,7 @@ export default function Home() {
 
       <section className="mx-auto grid w-full max-w-7xl gap-12 px-6 pb-20 pt-12 md:px-10 md:pb-28 md:pt-20 lg:grid-cols-2 lg:items-center font-onest">
         <div className="max-w-xl font-sans transition-all">
-          <h1 className="text-5xl font-heading leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
+          <h1 className="text-5xl font-heading leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl font-medium">
             Fits the form
             <br />
             on the first
@@ -48,10 +48,17 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="border-t border-charcoal-brown/10 px-6 py-6 md:px-10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 text-xs text-charcoal-brown/60 sm:flex-row sm:items-center sm:justify-between">
-          <span>under limit.</span>
-          <span>Developed by Aswin Sankar TK</span>
+      <footer className="border-t border-charcoal-brown/10 px-6 py-4 md:px-10">
+        <div className="mx-auto max-w-7xl text-xs text-charcoal-brown/60 sm:items-center sm:justify-between">
+          <span>
+            Developed by{" "}
+            <Link
+              href={"https://aswinsankartk.com"}
+              className="text-terracotta hover:text-charcoal-brown transition-all"
+            >
+              Aswin Sankar TK
+            </Link>
+          </span>
         </div>
       </footer>
     </main>

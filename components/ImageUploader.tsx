@@ -375,73 +375,121 @@ export default function ImageUploader() {
           {error}
         </p>
       )}
-      <div className="space-y-2">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <label htmlFor="targetWidth">Target Width (px) </label>
-          <input
-            type="number"
-            id="targetWidth"
-            value={targetWidth ?? ""}
-            min={1}
-            step={1}
-            onChange={(e) =>
-              setTargetWidth(
-                e.target.value === "" ? null : Number(e.target.value),
-              )
-            }
-            placeholder="Target Width"
-            className="w-full rounded-lg border border-charcoal-brown/15 bg-white px-3 py-2"
-          />
-          <label htmlFor="targetHeight">Target Height (px) </label>
-          <input
-            type="number"
-            id="targetHeight"
-            value={targetHeight ?? ""}
-            min={1}
-            step={1}
-            onChange={(e) =>
-              setTargetHeight(
-                e.target.value === "" ? null : Number(e.target.value),
-              )
-            }
-            placeholder="Target Height"
-            className="w-full rounded-lg border border-charcoal-brown/15 bg-white px-3 py-2"
-          />
-          <label htmlFor="minimumFileSize">Minimum File Size (KB)</label>
-          <input
-            type="number"
-            id="minimumFileSize"
-            value={minimumFileSize ?? ""}
-            min={0}
-            step={1}
-            onChange={(e) =>
-              setMinimumFileSize(
-                e.target.value === "" ? null : Number(e.target.value),
-              )
-            }
-            placeholder="Minimum File Size"
-            className="w-full rounded-lg border border-charcoal-brown/15 bg-white px-3 py-2"
-          />
-          <label htmlFor="maximumFileSize">Maximum File Size (KB)</label>
-          <input
-            type="number"
-            id="maximumFileSize"
-            value={maximumFileSize ?? ""}
-            min={0}
-            step={1}
-            onChange={(e) =>
-              setMaximumFileSize(
-                e.target.value === "" ? null : Number(e.target.value),
-              )
-            }
-            placeholder="Maximum File Size"
-            className="w-full rounded-lg border border-charcoal-brown/15 bg-white px-3 py-2"
-          />
+
+      <div className="space-y-5">
+        {/* Target dimensions */}
+        <div className="space-y-2">
+          <h3 className="text-sm font-semibold">Target dimensions (px)</h3>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="min-w-0 space-y-1.5">
+              <label
+                htmlFor="targetWidth"
+                className="block text-xs font-medium text-charcoal-brown/70"
+              >
+                Width
+              </label>
+              <input
+                type="number"
+                id="targetWidth"
+                value={targetWidth ?? ""}
+                min={1}
+                step={1}
+                onChange={(e) =>
+                  setTargetWidth(
+                    e.target.value === "" ? null : Number(e.target.value),
+                  )
+                }
+                placeholder="Width"
+                className="w-full min-w-0 rounded-lg border border-charcoal-brown/15 bg-white px-3 py-2"
+              />
+            </div>
+
+            <div className="min-w-0 space-y-1.5">
+              <label
+                htmlFor="targetHeight"
+                className="block text-xs font-medium text-charcoal-brown/70"
+              >
+                Height
+              </label>
+              <input
+                type="number"
+                id="targetHeight"
+                value={targetHeight ?? ""}
+                min={1}
+                step={1}
+                onChange={(e) =>
+                  setTargetHeight(
+                    e.target.value === "" ? null : Number(e.target.value),
+                  )
+                }
+                placeholder="Height"
+                className="w-full min-w-0 rounded-lg border border-charcoal-brown/15 bg-white px-3 py-2"
+              />
+            </div>
+          </div>
         </div>
+
+        {/* File size range */}
+        <div className="space-y-2">
+          <h3 className="text-sm font-semibold">File size (KB)</h3>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="min-w-0 space-y-1.5">
+              <label
+                htmlFor="minimumFileSize"
+                className="block text-xs font-medium text-charcoal-brown/70"
+              >
+                Minimum
+              </label>
+              <input
+                type="number"
+                id="minimumFileSize"
+                value={minimumFileSize ?? ""}
+                min={0}
+                step={1}
+                onChange={(e) =>
+                  setMinimumFileSize(
+                    e.target.value === "" ? null : Number(e.target.value),
+                  )
+                }
+                placeholder="Minimum"
+                className="w-full min-w-0 rounded-lg border border-charcoal-brown/15 bg-white px-3 py-2"
+              />
+            </div>
+
+            <div className="min-w-0 space-y-1.5">
+              <label
+                htmlFor="maximumFileSize"
+                className="block text-xs font-medium text-charcoal-brown/70"
+              >
+                Maximum
+              </label>
+              <input
+                type="number"
+                id="maximumFileSize"
+                value={maximumFileSize ?? ""}
+                min={0}
+                step={1}
+                onChange={(e) =>
+                  setMaximumFileSize(
+                    e.target.value === "" ? null : Number(e.target.value),
+                  )
+                }
+                placeholder="Maximum"
+                className="w-full min-w-0 rounded-lg border border-charcoal-brown/15 bg-white px-3 py-2"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-3">
         <div className="space-y-2">
           <label htmlFor="outputFormat" className="block text-sm font-medium">
             Output Format:
           </label>
+
           <select
             id="outputFormat"
             value={outputFormat}
@@ -475,6 +523,7 @@ export default function ImageUploader() {
           )}
         </button>
       </div>
+
       <div>
         {/* Combined grid */}
         {image && (
